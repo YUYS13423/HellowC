@@ -8,8 +8,11 @@
 #include "Components/TextRenderComponent.h"
 
 
+
+
+
 // Sets default values
-AHellowSphere::AHellowSphere()
+AHelloSphere::AHelloSphere()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,10 +30,13 @@ AHellowSphere::AHellowSphere()
 	//Construction helper를 사용해 메시에 스태틱 메시를 적용한다.
 	ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
 
+	ConstructorHelpers::FObjectFinder<UMaterial> SphereMaterial(TEXT("Material'/Game/StarterContent/Materials/M_Metal_Burnished_Steel.M_Metal_Burnished_Steel'"));
+
 	//메시 에셋이 발견됐다면 메시의 속성을 조절한다.
 	if (SphereAsset.Succeeded())
 	{
 		SphereVisual->SetStaticMesh(SphereAsset.Object);
+		SphereVisual->SetMaterial(0, SphereMaterial.Object);
 		SphereVisual->SetRelativeLocation(FVector(0.0f, 0.0f, -50.0f));
 	}
 
@@ -58,20 +64,34 @@ AHellowSphere::AHellowSphere()
 	TextRenderComponent->SetVisibility(true);
 	TextRenderComponent->SetText(NSLOCTEXT("AnyNs", "Any", "HelloWorld"));
 
+	OnActorBeginOverlap.AddDynamic(this, &AHelloSphere::MyOnBeginOverlap);
+	OnActorEndOverlap.AddDynamic(this, &AHelloSphere::MyOnEndOverlap);
 
 }
 
 // Called when the game starts or when spawned
-void AHellowSphere::BeginPlay()
+void AHelloSphere::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AHellowSphere::Tick(float DeltaTime)
+void AHelloSphere::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AHelloSphere::MyOnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	FString outputString;
+	outputString = "Hellow" + OtherActor->GetName() + "!";
+	TextRenderComponent->SetText(FText::FromString(outputString));
+}
+
+void AHelloSphere::MyOnEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	TextRenderComponent->SetText(NSLOCTEXT("AnyNs", "Any", "HellowWorld"));
 }
 

@@ -7,13 +7,13 @@
 #include "HellowSphere.generated.h"
 
 UCLASS()
-class HELLOWC_API AHellowSphere : public AActor
+class HELLOWC_API AHelloSphere : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AHellowSphere();
+	AHelloSphere();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,5 +25,14 @@ public:
 
 protected:
 	class UTextRenderComponent* TextRenderComponent;
+
+
+	//오버랩 수행
+	UFUNCTION()
+		void MyOnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+	//오버랩 종료 수행
+	UFUNCTION()
+		void MyOnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 };
